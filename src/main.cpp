@@ -10,6 +10,7 @@ void GetSensorQuaternion();
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x70);
 
+// You need fill out broadcastAddress!!!
 uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 unsigned long lastTime = 0;
