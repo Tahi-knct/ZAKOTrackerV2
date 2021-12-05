@@ -15,7 +15,7 @@ uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 unsigned long lastTime = 0;
 unsigned long timerDelay = 2000;
 
-float QuatDataArray[4];
+uint8_t QuatDataArray[4];
 
 void OnDataSent(uint8_t* mac_addr, uint8_t sendStatus) {
   Serial.print("Last Packet Status: ");
@@ -46,7 +46,7 @@ void setup() {
 void loop() {
   GetSensorQuaternion();
   if ((millis() - lastTime) > timerDelay) {
-    esp_now_send(broadcastAddress, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
+    esp_now_send(broadcastAddress, QuatDataArray, sizeof(QuatDataArray));
     lastTime = millis();
   }
 }
