@@ -1,10 +1,6 @@
-// set Mode_Sender or Mode_Reciver
+// set "Mode_Sender" or "Mode_Reciver"
 #define Mode Mode_Sender
 
-#if Mode == Mode_Sender
-
-#elif Mode == Mode_Reciver
-
-#else
-#error you need select Mode in config.h
-#endif
+// I2C pin
+#define PIN_IMU_SDA 5
+#define PIN_IMU_SCL 4

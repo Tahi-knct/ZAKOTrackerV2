@@ -1,3 +1,4 @@
+#include "config.h"
 #include <Adafruit_BNO055.h>
 #include <Adafruit_Sensor.h>
 #include <Arduino.h>
@@ -5,9 +6,6 @@
 #include <SPI.h>
 #include <espnow.h>
 #include <utility/imumaths.h>
-
-// set Mode_Sender or Mode_Reciver
-#define Mode Mode_Sender
 
 #if Mode == Mode_Sender
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x70);
