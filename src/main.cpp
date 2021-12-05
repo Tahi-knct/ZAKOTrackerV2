@@ -47,7 +47,7 @@ void setup() {
 void loop() {
   GetSensorQuaternion();
   if ((millis() - lastTime) > timerDelay) {
-    esp_now_send(broadcastAddress, QuatDataArray, sizeof(QuatDataArray));
+    esp_now_send(broadcastAddress, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
     lastTime = millis();
   }
 }
