@@ -6,7 +6,7 @@
 #include <espnow.h>
 #include <utility/imumaths.h>
 
-// set Mode_Sender or Mode_Reciver
+// set Mode_Sender or Mode_Receiver
 #define Mode Mode_Sender
 
 #if Mode == Mode_Sender
@@ -16,7 +16,7 @@ const long refreshRate = 60;
 unsigned long lastTime = 0;
 unsigned long timerDelay = 1000 / refreshRate;
 
-uint8_t QuatDataArray[4];
+float QuatDataArray[4];
 
 // You need fill out broadcastAddress!!!
 uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
@@ -38,7 +38,7 @@ void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
     }
 }
 
-#elif Mode == Mode_Reciver
+#elif Mode == Mode_Receiver
 void OnDataRecv(uint8_t *mac_addr, uint8_t *incomingData, uint8_t len) {
     Serial.print("s\t");
     for (int i = 0; i < len; i++) {
@@ -84,6 +84,11 @@ void loop() {
     GetSensorQuaternion();
     if ((millis() - lastTime) > timerDelay) {
         esp_now_send(broadcastAddress, (uint8_t *)&QuatDataArray, sizeof(QuatDataArray));
+        for (int i = 0; i < 4; i++) {
+            Serial.print(QuatDataArray[i]);
+            Serial.print(" ");
+        }
+        Serial.println();
         lastTime = millis();
     }
 

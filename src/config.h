@@ -3,8 +3,8 @@
 
 #if Mode == Mode_Sender
 
-#elif Mode == Mode_Reciver
+#elif Mode == Mode_Receiver
 
 #else
-#error you need select Mode in config.h
+    #error you need select Mode in config.h
 #endif
