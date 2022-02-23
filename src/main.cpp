@@ -6,10 +6,7 @@
 #include <espnow.h>
 #include <utility/imumaths.h>
 
-const int Call_Num = 0;
-
-// set Mode_Sender or Mode_Receiver
-#define Mode Mode_Sender
+#include "config.h"
 
 #if Mode == Mode_Sender
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x70);
@@ -37,14 +34,6 @@ void Send_cb(uint8_t* mac_addr, uint8_t sendStatus) {
 }
 
 #elif Mode == Mode_Receiver
-void OnDataRecv(uint8_t* mac_addr, uint8_t* incomingData, uint8_t len) {
-    Serial.print("s\t");
-    for (int i = 0; i < len; i++) {
-        Serial.print(incomingData[i]);
-        Serial.print("\t");
-    }
-    Serial.print("\n");
-}
 
 #else
     #error you need select Mode
