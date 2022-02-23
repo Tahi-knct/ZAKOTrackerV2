@@ -6,6 +6,8 @@
 #include <espnow.h>
 #include <utility/imumaths.h>
 
+const int Call_Num = 0;
+
 // set Mode_Sender or Mode_Receiver
 #define Mode Mode_Sender
 
@@ -16,30 +18,26 @@ const long refreshRate = 60;
 unsigned long lastTime = 0;
 unsigned long timerDelay = 1000 / refreshRate;
 
-float QuatDataArray[4];
+float QuatDataArray[5];
 
-// You need fill out broadcastAddress!!!
-uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+// You need to check Receiver_Address!!!
+uint8_t Receiver_Address[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 void GetSensorQuaternion() {
     imu::Quaternion quat = bno.getQuat();
-    QuatDataArray[0] = quat.x();
-    QuatDataArray[1] = quat.y();
-    QuatDataArray[2] = quat.z();
-    QuatDataArray[3] = quat.w();
+    QuatDataArray[1] = quat.x();
+    QuatDataArray[2] = quat.y();
+    QuatDataArray[3] = quat.z();
+    QuatDataArray[4] = quat.w();
 }
 
-void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
+void Send_cb(uint8_t* mac_addr, uint8_t sendStatus) {
     Serial.print("Last Packet Status: ");
-    if (sendStatus == 0) {
-        Serial.println("Success");
-    } else {
-        Serial.println("Fail");
-    }
+    Serial.println(sendStatus == 0 ? "OK" : "Failed");
 }
 
 #elif Mode == Mode_Receiver
-void OnDataRecv(uint8_t *mac_addr, uint8_t *incomingData, uint8_t len) {
+void OnDataRecv(uint8_t* mac_addr, uint8_t* incomingData, uint8_t len) {
     Serial.print("s\t");
     for (int i = 0; i < len; i++) {
         Serial.print(incomingData[i]);
@@ -62,13 +60,16 @@ void setup() {
 
 #if Mode == Mode_Sender
     esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
-    esp_now_register_send_cb(OnDataSent);
-    esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
+    esp_now_register_send_cb(Send_cb);
+    esp_now_add_peer(Receiver_Address, ESP_NOW_ROLE_SLAVE, 0, NULL, 0);
+
     if (!bno.begin(bno.OPERATION_MODE_IMUPLUS)) {
         Serial.print(" not detected\n");
         while (1)
             ;
     }
+
+    QuatDataArray[0] = Call_Num;
 
 #elif Mode == Mode_Reciver
     esp_now_set_self_role(ESP_NOW_ROLE_SLAVE);
@@ -83,10 +84,10 @@ void loop() {
 #if Mode == Mode_Sender
     GetSensorQuaternion();
     if ((millis() - lastTime) > timerDelay) {
-        esp_now_send(broadcastAddress, (uint8_t *)&QuatDataArray, sizeof(QuatDataArray));
+        esp_now_send(Receiver_Address, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
         for (int i = 0; i < 4; i++) {
             Serial.print(QuatDataArray[i]);
-            Serial.print(" ");
+            Serial.print(",");
         }
         Serial.println();
         lastTime = millis();
