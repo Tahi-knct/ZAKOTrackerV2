@@ -18,7 +18,7 @@ unsigned long timerDelay = 1000 / refreshRate;
 float QuatDataArray[5];
 
 // You need to check Receiver_Address!!!
-uint8_t Receiver_Address[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+uint8_t Receiver_Address[] = {0x24,0x6F,0x28,0xB5,0x11,0xD9};
 
 void GetSensorQuaternion() {
     imu::Quaternion quat = bno.getQuat();
@@ -49,13 +49,13 @@ void setup() {
 
 #if Mode == Mode_Sender
     esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
+    esp_now_add_peer(Receiver_Address, ESP_NOW_ROLE_COMBO, 1, NULL, 0);
     esp_now_register_send_cb(Send_cb);
-    esp_now_add_peer(Receiver_Address, ESP_NOW_ROLE_SLAVE, 0, NULL, 0);
 
     if (!bno.begin(bno.OPERATION_MODE_IMUPLUS)) {
         Serial.print(" not detected\n");
-        while (1)
-            ;
+        /*while (1)
+            ;*/
     }
 
     QuatDataArray[0] = Call_Num;
@@ -73,7 +73,7 @@ void loop() {
 #if Mode == Mode_Sender
     GetSensorQuaternion();
     if ((millis() - lastTime) > timerDelay) {
-        esp_now_send(Receiver_Address, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
+        //esp_now_send(Receiver_Address, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
         for (int i = 0; i < 4; i++) {
             Serial.print(QuatDataArray[i]);
             Serial.print(",");
