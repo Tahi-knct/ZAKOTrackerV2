@@ -2,6 +2,7 @@
 #include <Adafruit_Sensor.h>
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <Wire.h>
 #include <SPI.h>
 #include <espnow.h>
 #include <utility/imumaths.h>
@@ -9,7 +10,7 @@
 #include "config.h"
 
 #if Mode == Mode_Sender
-Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x70);
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
 const long refreshRate = 60;
 unsigned long lastTime = 0;
@@ -40,6 +41,7 @@ void Send_cb(uint8_t* mac_addr, uint8_t sendStatus) {
 #endif
 
 void setup() {
+    Wire.begin(2,14);
     Serial.begin(115200);
     WiFi.mode(WIFI_STA);
     if (esp_now_init() != 0) {
@@ -54,8 +56,8 @@ void setup() {
 
     if (!bno.begin(bno.OPERATION_MODE_IMUPLUS)) {
         Serial.print(" not detected\n");
-        /*while (1)
-            ;*/
+        while (1)
+            ;
     }
 
     QuatDataArray[0] = Call_Num;
@@ -73,7 +75,7 @@ void loop() {
 #if Mode == Mode_Sender
     GetSensorQuaternion();
     if ((millis() - lastTime) > timerDelay) {
-        //esp_now_send(Receiver_Address, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
+        esp_now_send(Receiver_Address, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
         for (int i = 0; i < 4; i++) {
             Serial.print(QuatDataArray[i]);
             Serial.print(",");
