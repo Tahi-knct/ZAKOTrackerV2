@@ -29,9 +29,10 @@ void GetSensorQuaternion() {
     QuatDataArray[4] = quat.w();
 }
 
+//コールバック関数
 void Send_cb(uint8_t* mac_addr, uint8_t sendStatus) {
-    Serial.print("Last Packet Status: ");
-    Serial.println(sendStatus == 0 ? "OK" : "Failed");
+    /*Serial.print("Last Packet Status: ");
+    Serial.println(sendStatus == 0 ? "OK" : "Failed");*/
 }
 
 #elif Mode == Mode_Receiver
