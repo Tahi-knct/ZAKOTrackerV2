@@ -56,7 +56,7 @@ void setup() {
     esp_now_register_send_cb(Send_cb);
 
     if (!bno.begin(bno.OPERATION_MODE_IMUPLUS)) {
-        Serial.print(" not detected\n");
+        Serial.print("not detected\n");
         while (1)
             ;
     }
@@ -77,7 +77,7 @@ void loop() {
     GetSensorQuaternion();
     if ((millis() - lastTime) > timerDelay) {
         esp_now_send(Receiver_Address, (uint8_t*)&QuatDataArray, sizeof(QuatDataArray));
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i < 5; i++) {
             Serial.print(QuatDataArray[i]);
             Serial.print(",");
         }
