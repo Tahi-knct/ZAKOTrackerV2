@@ -2,7 +2,7 @@
 #define Mode Mode_Sender
 
 #if Mode == Mode_Sender
-const int Call_Num = 0;
+const int Call_Num = 2;
 
 #elif Mode == Mode_Receiver
 

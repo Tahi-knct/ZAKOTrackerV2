@@ -2,8 +2,8 @@
 #include <Adafruit_Sensor.h>
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <Wire.h>
 #include <SPI.h>
+#include <Wire.h>
 #include <espnow.h>
 #include <utility/imumaths.h>
 
@@ -19,7 +19,7 @@ unsigned long timerDelay = 1000 / refreshRate;
 float QuatDataArray[5];
 
 // You need to check Receiver_Address!!!
-uint8_t Receiver_Address[] = {0x24,0x6F,0x28,0xB5,0x11,0xD9};
+uint8_t Receiver_Address[] = {0x24, 0x6F, 0x28, 0xB5, 0x11, 0xD9};
 
 void GetSensorQuaternion() {
     imu::Quaternion quat = bno.getQuat();
@@ -29,7 +29,7 @@ void GetSensorQuaternion() {
     QuatDataArray[4] = quat.w();
 }
 
-//コールバック関数
+// コールバック関数
 void Send_cb(uint8_t* mac_addr, uint8_t sendStatus) {
     /*Serial.print("Last Packet Status: ");
     Serial.println(sendStatus == 0 ? "OK" : "Failed");*/
@@ -42,7 +42,7 @@ void Send_cb(uint8_t* mac_addr, uint8_t sendStatus) {
 #endif
 
 void setup() {
-    Wire.begin(2,14);
+    Wire.begin(2, 14);
     Serial.begin(115200);
     WiFi.mode(WIFI_STA);
     if (esp_now_init() != 0) {
