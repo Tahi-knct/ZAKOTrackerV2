@@ -55,7 +55,7 @@ void setup() {
     esp_now_add_peer(Receiver_Address, ESP_NOW_ROLE_COMBO, 1, NULL, 0);
     esp_now_register_send_cb(Send_cb);
 
-    if (!bno.begin(bno.OPERATION_MODE_IMUPLUS)) {
+    if (!bno.begin(OPERATION_MODE_IMUPLUS)) {
         Serial.print("not detected\n");
         while (1)
             ;
